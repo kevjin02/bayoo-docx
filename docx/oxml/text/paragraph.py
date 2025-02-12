@@ -54,8 +54,13 @@ class CT_P(BaseOxmlElement):
 
     def add_fn(self, text, footnotes_part):
         footnote = footnotes_part.add_footnote()
-        footnote._add_p(' '+text)
+        footnote._add_p(text)
         _r = self.add_r()
+        rPr = OxmlElement('w:rPr')
+        vertAlign = OxmlElement('w:vertAlign')
+        vertAlign.set(qn('w:val'), 'superscript')
+        rPr.append(vertAlign)
+        _r.append(rPr)
         _r.add_footnote_reference(footnote._id)
         
         return footnote

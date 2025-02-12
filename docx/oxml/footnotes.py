@@ -11,6 +11,7 @@ from ..opc.constants import NAMESPACE
 from .xmlchemy import (
     BaseOxmlElement, OneAndOnlyOne, RequiredAttribute, ZeroOrMore, ZeroOrOne
 )
+from .ns import qn
 
 
 class CT_Footnotes(BaseOxmlElement):
@@ -57,9 +58,33 @@ class CT_Footnote(BaseOxmlElement):
         _p = OxmlElement('w:p')
         _p.footnote_style()
         
+        pPr = OxmlElement('w:pPr')
+        spacing = OxmlElement('w:spacing')
+        spacing.set(qn('w:before'), '0')
+        spacing.set(qn('w:after'), '0')
+        spacing.set(qn('w:line'), '240')
+        spacing.set(qn('w:lineRule'), 'auto')
+        pPr.append(spacing)
+        _p.append(pPr)
+        
         _r = _p.add_r()
+        rPr = OxmlElement('w:rPr')
+        vertAlign = OxmlElement('w:vertAlign')
+        vertAlign.set(qn('w:val'), 'superscript')
+        sz = OxmlElement('w:sz')
+        sz.set(qn('w:val'), '20')
+        rPr.append(vertAlign)
+        rPr.append(sz)
+        _r.append(rPr)
         _r.footnote_style()
+        
         _r = _p.add_r()
+        rPr = OxmlElement('w:rPr')
+        sz = OxmlElement('w:sz')
+        sz.set(qn('w:val'), '20')
+        rPr.append(sz)
+        _r.append(rPr)
+
         _r.add_footnoteRef()
         
         run = Run(_r, self)
